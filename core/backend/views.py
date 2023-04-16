@@ -11,6 +11,19 @@ class BlogPostListCreateView(generics.ListCreateAPIView):
     serializer_class = BlogPostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    # Define a custom action to add likes to a blog post
+    @action(detail=True, methods=['post'])
+    def add_like(self, request, pk=None):
+        # Get the blog post object
+        blog_post = self.get_object()
+
+        # Add the current user to the list of users who liked the blog post
+        blog_post.likes.add(request.user)
+
+        # Serialize the updated blog post and return the response
+        serializer = self.get_serializer(blog_post)
+        return Response(serializer.data)
+
 
 class BlogPostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BlogPost.objects.all()
@@ -52,3 +65,22 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return super().create(request, *args, **kwargs)
+
+
+class BlogPostLikeAPIView(viewsets.ModelViewSet):
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    # Define a custom action to add likes to a blog post
+    @action(detail=True, methods=['post'])
+    def add_like(self, request, pk=None):
+        # Get the blog post object
+        blog_post = self.get_object()
+
+        # Add the current user to the list of users who liked the blog post
+        blog_post.likes.add(request.user)
+
+        # Serialize the updated blog post and return the response
+        serializer = self.get_serializer(blog_post)
+        return Response(serializer.data)
