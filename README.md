@@ -10,7 +10,7 @@ Installation Steps
 
 -Step5 run the following command if dummy users up to 12 should be created for you
 
-      docker-compose  docker-compose exec app python manage.py create_dummy_users
+      docker-compose exec app python manage.py create_dummy_users
 
 -Step6
   if you would like to test the api in postman then you need a token and this can be created using below command
